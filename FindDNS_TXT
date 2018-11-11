@@ -1,0 +1,37 @@
+@echo off
+:Loop
+color 17
+Title FindDNS Program #Arvind
+echo DNS Records (A,NS,CNAME,MX,TXT,PTR)
+@echo off
+echo %DATE%
+set /p domainname=Enter Domain Name :
+echo ------------------------------------------------------------
+echo A Record (Domain)
+nslookup -query=a %domainname% 8.8.8.8  | findstr "Address" | findstr /V "8.8.8.8"
+nslookup -query=ptr %domainname% 8.8.8.8 | findstr "arpa"
+echo ------------------------------------------------------------
+echo NS Record (Name Server)
+nslookup -query=ns %domainname% 8.8.8.8 | find "nameserver"
+echo ------------------------------------------------------------
+echo MX Record (Mail Exchange Server)
+nslookup -query=mx %domainname% 8.8.8.8 | find "MX"
+echo ------------------------------------------------------------
+echo TXT Record (SPF Record)
+echo ------------------------------------------------------------
+echo CNAME Record (CNAME Record)
+nslookup -query=cname mail.%domainname% 8.8.8.8 | findstr "canonical"
+nslookup -query=cname ftp.%domainname% 8.8.8.8 | findstr "canonical"
+nslookup -query=cname %domainname% 8.8.8.8 | findstr "canonical"
+echo ------------------------------------------------------------
+echo Other A Record
+echo FTP
+nslookup -query=a ftp.%domainname% 8.8.8.8 | findstr "Address ftp" | findstr /V "8.8.8.8"
+echo Mail
+nslookup -query=a mail.%domainname% 8.8.8.8 | findstr "Address mail" | findstr /V "8.8.8.8"
+echo Webmail
+nslookup -query=a webmail.%domainname% 8.8.8.8 | findstr "Address mail" | findstr /V "8.8.8.8"
+echo ------------------------------------------------------------
+echo Enter IP Addres for Server HostName (PTR)
+echo. && echo.
+goto Loop
